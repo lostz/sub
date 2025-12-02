@@ -421,114 +421,6 @@ const lunarBiz = {
 };
 
 // 定义HTML模板
-const loginPage = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>订阅管理系统</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-  <style>
-    .login-container {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-    }
-    .login-box {
-      backdrop-filter: blur(8px);
-      background-color: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      transition: all 0.3s;
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-    .input-field {
-      transition: all 0.3s;
-      border: 1px solid #e2e8f0;
-    }
-    .input-field:focus {
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
-    }
-  </style>
-</head>
-<body class="login-container flex items-center justify-center">
-  <div class="login-box p-8 rounded-xl w-full max-w-md">
-    <div class="text-center mb-8">
-      <h1 class="text-2xl font-bold text-gray-800"><i class="fas fa-calendar-check mr-2"></i>订阅管理系统</h1>
-      <p class="text-gray-600 mt-2">登录管理您的订阅提醒</p>
-    </div>
-    
-    <form id="loginForm" class="space-y-6">
-      <div>
-        <label for="username" class="block text-sm font-medium text-gray-700 mb-1">
-          <i class="fas fa-user mr-2"></i>用户名
-        </label>
-        <input type="text" id="username" name="username" required
-          class="input-field w-full px-4 py-3 rounded-lg text-gray-700 focus:outline-none">
-      </div>
-      
-      <div>
-        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
-          <i class="fas fa-lock mr-2"></i>密码
-        </label>
-        <input type="password" id="password" name="password" required
-          class="input-field w-full px-4 py-3 rounded-lg text-gray-700 focus:outline-none">
-      </div>
-      
-      <button type="submit" 
-        class="btn-primary w-full py-3 rounded-lg text-white font-medium focus:outline-none">
-        <i class="fas fa-sign-in-alt mr-2"></i>登录
-      </button>
-      
-      <div id="errorMsg" class="text-red-500 text-center"></div>
-    </form>
-  </div>
-  
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      
-      const button = e.target.querySelector('button');
-      const originalContent = button.innerHTML;
-      button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>登录中...';
-      button.disabled = true;
-      
-      try {
-        const response = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-          window.location.href = '/admin';
-        } else {
-          document.getElementById('errorMsg').textContent = result.message || '用户名或密码错误';
-          button.innerHTML = originalContent;
-          button.disabled = false;
-        }
-      } catch (error) {
-        document.getElementById('errorMsg').textContent = '发生错误，请稍后再试';
-        button.innerHTML = originalContent;
-        button.disabled = false;
-      }
-    });
-  </script>
-</body>
-</html>
-`;
-
 const adminPage = `
 <!DOCTYPE html>
 <html>
@@ -3184,21 +3076,6 @@ const configPage = `
       
       <form id="configForm" class="space-y-8">
         <div class="border-b border-gray-200 pb-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">管理员账户</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label for="adminUsername" class="block text-sm font-medium text-gray-700">用户名</label>
-              <input type="text" id="adminUsername" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            </div>
-            <div>
-              <label for="adminPassword" class="block text-sm font-medium text-gray-700">密码</label>
-              <input type="password" id="adminPassword" placeholder="如不修改密码，请留空" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-              <p class="mt-1 text-sm text-gray-500">留空表示不修改当前密码</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="border-b border-gray-200 pb-6">
           <h3 class="text-lg font-medium text-gray-900 mb-4">显示设置</h3>
           
           
@@ -3517,7 +3394,6 @@ const configPage = `
         const response = await fetch('/api/config');
         const config = await response.json();
 
-        document.getElementById('adminUsername').value = config.ADMIN_USERNAME || '';
         document.getElementById('tgBotToken').value = config.TG_BOT_TOKEN || '';
         document.getElementById('tgChatId').value = config.TG_CHAT_ID || '';
         document.getElementById('notifyxApiKey').value = config.NOTIFYX_API_KEY || '';
@@ -3661,7 +3537,6 @@ const configPage = `
       }
 
       const config = {
-        ADMIN_USERNAME: document.getElementById('adminUsername').value.trim(),
         TG_BOT_TOKEN: document.getElementById('tgBotToken').value.trim(),
         TG_CHAT_ID: document.getElementById('tgChatId').value.trim(),
         NOTIFYX_API_KEY: document.getElementById('notifyxApiKey').value.trim(),
@@ -3697,11 +3572,6 @@ const configPage = `
         })()
       };
 
-      const passwordField = document.getElementById('adminPassword');
-      if (passwordField.value.trim()) {
-        config.ADMIN_PASSWORD = passwordField.value.trim();
-      }
-
       const submitButton = e.target.querySelector('button[type="submit"]');
       const originalContent = submitButton.innerHTML;
       submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>保存中...';
@@ -3718,8 +3588,7 @@ const configPage = `
 
         if (result.success) {
           showToast('配置保存成功', 'success');
-          passwordField.value = '';
-          
+
           // 更新全局时区并重新显示时间
           globalTimezone = config.TIMEZONE;
           showSystemTime();
@@ -4082,54 +3951,20 @@ const api = {
 
     const config = await getConfig(env);
 
-    if (path === '/login' && method === 'POST') {
-      const body = await request.json();
+    // 使用 Cloudflare Access 进行认证
+    const user = await verifyCloudflareAccess(request);
 
-      if (body.username === config.ADMIN_USERNAME && body.password === config.ADMIN_PASSWORD) {
-        const token = await generateJWT(body.username, config.JWT_SECRET);
-
-        return new Response(
-          JSON.stringify({ success: true }),
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Set-Cookie': 'token=' + token + '; HttpOnly; Path=/; SameSite=Strict; Max-Age=86400'
-            }
-          }
-        );
-      } else {
-        return new Response(
-          JSON.stringify({ success: false, message: '用户名或密码错误' }),
-          { headers: { 'Content-Type': 'application/json' } }
-        );
-      }
-    }
-
-    if (path === '/logout' && (method === 'GET' || method === 'POST')) {
-      return new Response('', {
-        status: 302,
-        headers: {
-          'Location': '/',
-          'Set-Cookie': 'token=; HttpOnly; Path=/; SameSite=Strict; Max-Age=0'
-        }
-      });
-    }
-
-    const token = getCookieValue(request.headers.get('Cookie'), 'token');
-    const user = token ? await verifyJWT(token, config.JWT_SECRET) : null;
-
-    if (!user && path !== '/login') {
+    if (!user) {
       return new Response(
-        JSON.stringify({ success: false, message: '未授权访问' }),
+        JSON.stringify({ success: false, message: '未授权访问，请通过 Cloudflare Access 登录' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
     if (path === '/config') {
       if (method === 'GET') {
-        const { JWT_SECRET, ADMIN_PASSWORD, ...safeConfig } = config;
         return new Response(
-          JSON.stringify(safeConfig),
+          JSON.stringify(config),
           { headers: { 'Content-Type': 'application/json' } }
         );
       }
@@ -4140,7 +3975,6 @@ const api = {
 
           const updatedConfig = {
             ...config,
-            ADMIN_USERNAME: newConfig.ADMIN_USERNAME || config.ADMIN_USERNAME,
             TG_BOT_TOKEN: newConfig.TG_BOT_TOKEN || '',
             TG_CHAT_ID: newConfig.TG_CHAT_ID || '',
             NOTIFYX_API_KEY: newConfig.NOTIFYX_API_KEY || '',
@@ -4187,16 +4021,6 @@ const api = {
             });
 
           updatedConfig.NOTIFICATION_HOURS = sanitizedNotificationHours;
-
-          if (newConfig.ADMIN_PASSWORD) {
-            updatedConfig.ADMIN_PASSWORD = newConfig.ADMIN_PASSWORD;
-          }
-
-          // 确保JWT_SECRET存在且安全
-          if (!updatedConfig.JWT_SECRET || updatedConfig.JWT_SECRET === 'your-secret-key') {
-            updatedConfig.JWT_SECRET = generateRandomSecret();
-            console.log('[安全] 生成新的JWT密钥');
-          }
 
           await env.SUBSCRIPTIONS_KV.put('config', JSON.stringify(updatedConfig));
 
@@ -4499,21 +4323,7 @@ async function getConfig(env) {
 
     const config = data ? JSON.parse(data) : {};
 
-    // 确保JWT_SECRET的一致性
-    let jwtSecret = config.JWT_SECRET;
-    if (!jwtSecret || jwtSecret === 'your-secret-key') {
-      jwtSecret = generateRandomSecret();
-      console.log('[配置] 生成新的JWT密钥');
-
-      // 保存新的JWT密钥
-      const updatedConfig = { ...config, JWT_SECRET: jwtSecret };
-      await env.SUBSCRIPTIONS_KV.put('config', JSON.stringify(updatedConfig));
-    }
-
     const finalConfig = {
-      ADMIN_USERNAME: config.ADMIN_USERNAME || 'admin',
-      ADMIN_PASSWORD: config.ADMIN_PASSWORD || 'password',
-      JWT_SECRET: jwtSecret,
       TG_BOT_TOKEN: config.TG_BOT_TOKEN || '',
       TG_CHAT_ID: config.TG_CHAT_ID || '',
       NOTIFYX_API_KEY: config.NOTIFYX_API_KEY || '',
@@ -4534,21 +4344,17 @@ async function getConfig(env) {
       BARK_SERVER: config.BARK_SERVER || 'https://api.day.app',
       BARK_IS_ARCHIVE: config.BARK_IS_ARCHIVE || 'false',
       ENABLED_NOTIFIERS: config.ENABLED_NOTIFIERS || ['notifyx'],
-      TIMEZONE: config.TIMEZONE || 'UTC', // 新增时区字段
+      TIMEZONE: config.TIMEZONE || 'UTC',
       NOTIFICATION_HOURS: Array.isArray(config.NOTIFICATION_HOURS) ? config.NOTIFICATION_HOURS : [],
       THIRD_PARTY_API_TOKEN: config.THIRD_PARTY_API_TOKEN || ''
     };
 
-    console.log('[配置] 最终配置用户名:', finalConfig.ADMIN_USERNAME);
+    console.log('[配置] 使用 Cloudflare Access 认证');
     return finalConfig;
   } catch (error) {
     console.error('[配置] 获取配置失败:', error);
-    const defaultJwtSecret = generateRandomSecret();
 
     return {
-      ADMIN_USERNAME: 'admin',
-      ADMIN_PASSWORD: 'password',
-      JWT_SECRET: defaultJwtSecret,
       TG_BOT_TOKEN: '',
       TG_CHAT_ID: '',
       NOTIFYX_API_KEY: '',
@@ -4567,52 +4373,29 @@ async function getConfig(env) {
       EMAIL_TO: '',
       ENABLED_NOTIFIERS: ['notifyx'],
       NOTIFICATION_HOURS: [],
-      TIMEZONE: 'UTC', // 新增时区字段
+      TIMEZONE: 'UTC',
       THIRD_PARTY_API_TOKEN: ''
     };
   }
 }
 
-async function generateJWT(username, secret) {
-  const header = { alg: 'HS256', typ: 'JWT' };
-  const payload = { username, iat: Math.floor(Date.now() / 1000) };
-
-  const headerBase64 = btoa(JSON.stringify(header));
-  const payloadBase64 = btoa(JSON.stringify(payload));
-
-  const signatureInput = headerBase64 + '.' + payloadBase64;
-  const signature = await CryptoJS.HmacSHA256(signatureInput, secret);
-
-  return headerBase64 + '.' + payloadBase64 + '.' + signature;
-}
-
-async function verifyJWT(token, secret) {
+// Cloudflare Access 认证验证函数
+async function verifyCloudflareAccess(request) {
   try {
-    if (!token || !secret) {
-      console.log('[JWT] Token或Secret为空');
+    // Cloudflare Access 会在认证成功后添加这个 header
+    const userEmail = request.headers.get('CF-Access-Authenticated-User-Email');
+
+    if (!userEmail) {
+      console.log('[CF Access] 未找到认证用户信息');
       return null;
     }
 
-    const parts = token.split('.');
-    if (parts.length !== 3) {
-      console.log('[JWT] Token格式错误，部分数量:', parts.length);
-      return null;
-    }
-
-    const [headerBase64, payloadBase64, signature] = parts;
-    const signatureInput = headerBase64 + '.' + payloadBase64;
-    const expectedSignature = await CryptoJS.HmacSHA256(signatureInput, secret);
-
-    if (signature !== expectedSignature) {
-      console.log('[JWT] 签名验证失败');
-      return null;
-    }
-
-    const payload = JSON.parse(atob(payloadBase64));
-    console.log('[JWT] 验证成功，用户:', payload.username);
-    return payload;
+    console.log('[CF Access] 认证成功，用户:', userEmail);
+    return {
+      email: userEmail
+    };
   } catch (error) {
-    console.error('[JWT] 验证过程出错:', error);
+    console.error('[CF Access] 验证过程出错:', error);
     return null;
   }
 }
@@ -5644,7 +5427,7 @@ function getCookieValue(cookieString, key) {
 }
 
 async function handleRequest(request, env, ctx) {
-  return new Response(loginPage, {
+  return new Response(adminPage, {
     headers: { 'Content-Type': 'text/html; charset=utf-8' }
   });
 }
@@ -5702,10 +5485,7 @@ export default {
           timestamp: new Date().toISOString(), // 使用UTC时间戳
           pathname: url.pathname,
           kvBinding: !!env.SUBSCRIPTIONS_KV,
-          configExists: !!config,
-          adminUsername: config.ADMIN_USERNAME,
-          hasJwtSecret: !!config.JWT_SECRET,
-          jwtSecretLength: config.JWT_SECRET ? config.JWT_SECRET.length : 0
+          configExists: !!config
         };
 
         return new Response(`
@@ -5732,8 +5512,7 @@ export default {
   <div class="info">
     <h3>配置信息</h3>
     <p class="${debugInfo.configExists ? 'success' : 'error'}">配置存在: ${debugInfo.configExists ? '✓' : '✗'}</p>
-    <p>管理员用户名: ${debugInfo.adminUsername}</p>
-    <p class="${debugInfo.hasJwtSecret ? 'success' : 'error'}">JWT密钥: ${debugInfo.hasJwtSecret ? '✓' : '✗'} (长度: ${debugInfo.jwtSecretLength})</p>
+    <p>认证方式: Cloudflare Access</p>
   </div>
 
   <div class="info">
